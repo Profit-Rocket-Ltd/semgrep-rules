@@ -1,0 +1,30 @@
+rules:
+  - id: profit-rocket.no-pdb-import
+    patterns:
+      - pattern-either:
+          - pattern: import pdb
+          - pattern: import ipdb
+          - pattern: from pdb import $X
+          - pattern: from ipdb import $X
+    message: >-
+      Debugger import left in committed code. Remove `import pdb` / `import ipdb`
+      before merging — these block automated test runs and ship breakpoints to
+      production. STANDARD.md forbids debugging leftovers in source.
+    languages: [python]
+    severity: ERROR
+    metadata:
+      category: code_quality
+      source: profit-rocket
+      references:
+        - https://github.com/Profit-Rocket-Ltd/framework/blob/main/STANDARD.md
+
+  - id: profit-rocket.no-breakpoint-call
+    pattern: breakpoint(...)
+    message: >-
+      `breakpoint()` left in committed code. Remove before merging — it will
+      drop the production worker into pdb on hit.
+    languages: [python]
+    severity: ERROR
+    metadata:
+      category: code_quality
+      source: profit-rocket
